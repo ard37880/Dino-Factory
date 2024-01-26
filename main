@@ -46,43 +46,34 @@ async def on_ready():
 # Hello when prompt 
 @client.command()
 async def hello(ctx):
-    await ctx.send(f'Hello {ctx.author.name} Im reached Ruby. Nice to meet you!')
+    await ctx.send(f'Hello {ctx.author.name}, Im reached Ruby. Nice to meet you!')
 
 # Goodbye when prompt
 @client.command()
 async def goodbye(ctx):
-    await ctx.send(f'Goodbye {ctx.author.name} hope you have a great rest of your day!')
+    await ctx.send(f'Goodbye {ctx.author.name}, hope you have a great rest of your day!')
 
 # Kicks Member
 @client.command()
 @has_permissions(kick_members=True)
 async def kick(ctx, member: discord.Member, *, reson=None):
     await member.kick(reason=reason)
-    await ctx.send(f'User {member} has been kicked')
+    await ctx.send(f'User {member} has been kicked.')
 
 ############### Events ##############################################################
+
+# Prints in terminal when ready for use
+@client.event
+async def on_ready():
+    print("Ruby is ready for use!")
+    print("-------------------------------------------------")
 
 # Welcomes user to server in Welcome Channel
    
 @client.event
 async def on_member_join(member):
     channel = client.get_channel(1198457414207426642)
-    await channel.send(f'Welcome to the server {member} Please read the rules and we will see you around!')
-
-
-# Checks for Key Words
-
-@client.event
-async def on_message(message):
-
-    if message.content == "4701 staggerbursh rd":
-        await message.delete()
-        await message.channel.send("Message was deleted for community safty.")
-        
-@client.event
-async def on_ready():
-    print("Ruby is ready for use!")
-    print("-------------------------------------------------")
+    await channel.send(f'Welcome to the server {member}! Please read the rules and we will see you around!')
 
 # Profanity Checker
 profanity_list = bw
