@@ -1,4 +1,4 @@
-# Ruby
+# Ruby/ The Ruby Bot
 # Made by: Andrew Davis
 # 01/25/2024
 '''   
@@ -46,7 +46,7 @@ async def join(ctx):
         channel = ctx.author.voice.channel
         voice = await channel.connect()
         source = FFmpegPCMAudio('elevattor.mp3')
-        await channel.connect()
+        player = voice.play(source)
     else:
         await ctx.send("Please join a voice channel to run this command.")
 
@@ -66,7 +66,7 @@ async def leave(ctx):
 @client.event
 async def on_member_join(member):
     channel = client.get_channel(1198457414207426642)
-    await channel.send("Welcome to the server")
+    await channel.send("Welcome {user_name} to {server_name}! Please read https://discord.com/channels/1004848935061434428/1198485354710311002 and we will see you around!")
   
 
 # Sends alert to Logs Channel when someone left
