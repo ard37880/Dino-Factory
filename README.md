@@ -14,4 +14,4 @@ Current Features:
 How to install:
 1. Click the install link: https://discord.com/api/oauth2/authorize?client_id=1200274769354969148&permissions=8&scope=bot
 2. Accept permissions 
-3. Done!
+3. The Ruby Bot should now be added to your server!
