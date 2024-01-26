@@ -29,4 +29,4 @@ async def hello(ctx):
     await ctx.send("Hello, you've reached Rexy from Dino Factory. Nice to meet you!")
 
 # Bot Token
-client.run('MTIwMDI3NDc2OTM1NDk2OTE0OA.GwvEQR.oA-MCIcXykCr05s9N5RUUY3g8JDO-zoVqy7_6s')
+client.run('BOT TOKEN GOES HERE')
