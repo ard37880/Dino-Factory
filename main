@@ -60,6 +60,23 @@ async def kick(ctx, member: discord.Member, *, reson=None):
     await member.kick(reason=reason)
     await ctx.send(f'User {member} has been kicked.')
 
+@kick.error
+async def kick_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("You don't have permission to kick people!")
+
+# Bans Member
+@client.command()
+@has_permissions(ban_members=True)
+async def kick(ctx, member: discord.Member, *, reson=None):
+    await member.ban(reason=reason)
+    await ctx.send(f'User {member} has been banned.')
+
+@kick.error
+async def ban_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("You don't have permission to ban people!")
+
 ############### Events ##############################################################
 
 # Prints in terminal when ready for use
