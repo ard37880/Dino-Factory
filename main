@@ -59,20 +59,20 @@ async def leave(ctx):
 # Events
  
 # Welcomes user to server in Welcome Channel
-'''   
+   
 @client.event
 async def on_member_join(member):
     channel = client.get_channel(1198457414207426642)
     await channel.send("Welcome to the server")
-'''   
+  
 
 # Sends alert to Logs Channel when someone left
-'''   
+  
 @client.event
 async def on_member_remove(member):
-    channel = client.get_channel(1198472636104183989)
-    await channel.send("Someone has left the server")
-'''
+    channel = client.get_channel(1198457414207426642)
+    await channel.send("Goodbye, thank you for stopping in!")
+
 
 
 
