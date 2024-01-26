@@ -8,6 +8,8 @@ Any code not in use comment out like this so we can save it for reactivation per
 # Add Imports Here
 import discord
 import requests
+import nacl
+
 from discord.ext import commands
 from apikeys import discord_bot_token
 
@@ -36,6 +38,24 @@ async def hello(ctx):
 async def goodbye(ctx):
     await ctx.send("Goodbye, hope you have a great rest of your day!")
 
+# Joins Voice Channel
+@client.command()
+async def join(ctx):
+    if ctx.author.voice:
+        channel = ctx.author.voice.channel
+        await channel.connect()
+    else:
+        await ctx.send("Please join a voice channel to run this command.")
+
+# Leaves Voice Channel
+@client.command()
+async def leave(ctx):
+    if ctx.voice_client:
+        await ctx.voice_client.disconnect()
+        await ctx.send("Dino Factory has left the voice chat")
+    else:
+        await ctx.send("Currently not in a voice channel")
+
 # Events
  
 # Welcomes user to server in Welcome Channel
@@ -53,6 +73,13 @@ async def on_member_remove(member):
     channel = client.get_channel(1198472636104183989)
     await channel.send("Someone has left the server")
 '''
+
+
+
+
+
+
+
 
 # Bot Token
 client.run(discord_bot_token)
