@@ -20,6 +20,7 @@ from discord import FFmpegPCMAudio
 from discord import PCMVolumeTransformer
 from apikeys import discord_bot_token
 from discord.ext import commands
+from words import bw
 
 ############# Intendts #############################################################
 intents = intents = discord.Intents(value=8)
@@ -84,7 +85,7 @@ async def on_ready():
     print("-------------------------------------------------")
 
 # Profanity Checker
-profanity_list = ["fuck", "bitch", "ass", "cunt"]
+profanity_list = bw
 
 @client.event
 async def on_message(message):
