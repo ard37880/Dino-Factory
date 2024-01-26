@@ -29,5 +29,9 @@ async def on_ready():
 async def hello(ctx):
     await ctx.send("Hello, you've reached Rexy from Dino Factory. Nice to meet you!")
 
+@client.command()
+async def goodbye(ctx):
+    await ctx.send("Goodbye, hope you have a great rest of your day!")
+
 # Bot Token
 client.run(discord_bot_token)
