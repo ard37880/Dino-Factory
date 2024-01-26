@@ -1,4 +1,4 @@
-                                               Welcome to Dino Factory
+                                                Welcome to Dino Factory
 
 ![DFL](https://github.com/ard37880/Dino-Factory/assets/34947107/cc40fbd1-8e2e-4f3f-b966-8ab2bc651f92)
 
