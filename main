@@ -7,7 +7,6 @@
 # Add Imports Here
 import discord
 from discord.ext import commands
-import audio_encoding_library
 
 # Trigger key used for bot
 client = commands.Bot(command_prefix = '/')
@@ -28,51 +27,5 @@ async def on_ready():
 async def hello(ctx):
     await ctx.send("Hello, you've reached Rexy from Dino Factory. Nice to meet you!")
 
-
-# Voice Recording Start
-@bot.command()
-async def start_recording(ctx, voice_channel_id):
-    # Join the specified voice channel
-    voice_channel = bot.get_channel(voice_channel_id)
-    voice_client = await voice_channel.connect()
-
-    # Start capturing the audio stream
-    audio_stream = start_audio_capture(voice_client)
-
-    # Notify that recording has started
-    await ctx.send("Recording started.")
-
-# Command to stop recording and save the file
-@bot.command()
-async def stop_recording(ctx, text_channel_id):
-    # Stop capturing the audio stream
-    audio_data = stop_audio_capture(audio_stream)
-
-    # Encode and save the audio data to a file
-    file_path = encode_and_save_audio(audio_data)
-
-    # Upload the file to the specified text channel
-    text_channel = bot.get_channel(text_channel_id)
-    await text_channel.send(file=discord.File(file_path))
-
-    # Leave the voice channel
-    await voice_client.disconnect()
-
-    # Notify that recording has stopped
-    await ctx.send("Recording stopped and saved.")
-
-# Functions to handle audio capture, encoding, and saving
-def start_audio_capture(voice_client):
-    # Code to capture audio from voice_client
-    pass
-
-def stop_audio_capture(audio_stream):
-    # Code to stop audio capture and return the data
-    pass
-
-def encode_and_save_audio(audio_data):
-    # Code to encode and save audio, then return file path
-    pass
-# Voice Recording End
 
 client.run('MTIwMDI3NDc2OTM1NDk2OTE0OA.GwvEQR.oA-MCIcXykCr05s9N5RUUY3g8JDO-zoVqy7_6s')
