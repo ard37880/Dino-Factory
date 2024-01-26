@@ -12,7 +12,6 @@ Current Features:
 - Kick and Ban users
 
 Upcoming Features:
-- Kick and Ban users
 - Join bot to Voice Channels
 - Play, pause, and stop music
 
