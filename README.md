@@ -14,7 +14,7 @@ Current Features:
 Upcoming Features:
 - Join bot to Voice Channels
 - Play, pause, and stop music
-- Embeds & Buttons
+- Buttons
 - DM from Ruby
 - Reacts & Roles
 
