@@ -9,9 +9,14 @@ Any code not in use comment out like this so we can save it for reactivation per
 import discord
 import requests
 import nacl
+import asyncio
+import traceback
+import asyncio
+import logging
 
 from discord.ext import commands
 from discord import FFmpegPCMAudio
+from discord import PCMVolumeTransformer
 from apikeys import discord_bot_token
 
 ############# Intendts #############################################################
@@ -31,24 +36,44 @@ async def on_ready():
     print("-------------------------------------------------")
 
 ############ Commands #############################################################
+# Hello when prompt 
 @client.command()
 async def hello(ctx):
     await ctx.send("Hello, you've reached Ruby. Nice to meet you!")
 
+# Goodbye when prompt
 @client.command()
 async def goodbye(ctx):
     await ctx.send("Goodbye, hope you have a great rest of your day!")
 
+# Joining Voice Channel needs work currently in-progress and not supported
+'''
 # Joins Voice Channel with Music
+MAX_RECONNECT_ATTEMPTS = 3    
+
 @client.command()
 async def join(ctx):
     if ctx.author.voice:
         channel = ctx.author.voice.channel
-        voice = await channel.connect()
-        source = FFmpegPCMAudio('elevattor.mp3')
-        player = voice.play(source)
+        for attempt in range(MAX_RECONNECT_ATTEMPTS):
+            try:
+                voice_client = await channel.connect(timeout=60.0)
+                source = FFmpegPCMAudio('test.mp3')
+                voice_client.play(source)
+                break  # Break out of the loop if connection is successful
+            except asyncio.TimeoutError:
+                print(f"Attempt {attempt + 1} failed. Retrying...")
+                if attempt < MAX_RECONNECT_ATTEMPTS - 1:
+                    await asyncio.sleep(5)  # Wait for 5 seconds before retrying
+                else:
+                    await ctx.send("Failed to connect to the voice channel after several attempts.")
+                    print("Failed to connect to the voice channel after several attempts.")
+            except Exception as e:
+                print(f"Test join error: {e}")
+                await ctx.send(f"Test join error: {e}")
+                break
     else:
-        await ctx.send("Please join a voice channel to run this command.")
+        await ctx.send("You are not in a voice channel.")
 
 # Pauses Music while in Voice Channel
 @client.command()
@@ -72,19 +97,26 @@ async def resume(ctx):
 @client.command()
 async def leave(ctx):
     if ctx.voice_client:
-        await ctx.voice_client.disconnect()
-        await ctx.send("Dino Factory has left the voice chat")
+        try:
+            await ctx.voice_client.disconnect()
+            await ctx.send("Dino Factory has left the voice chat.")
+            print("Successfully disconnected.")
+        except Exception as e:
+            print(f"Error disconnecting from voice channel: {e}")
+            await ctx.send(f"An error occurred while trying to leave the voice channel: {e}")
     else:
-        await ctx.send("Currently not in a voice channel")
+        await ctx.send("I am not currently in a voice channel.")
+        print("No voice client to disconnect.")
 
 ############### Events ##############################################################
- 
+'''
+
 # Welcomes user to server in Welcome Channel
    
 @client.event
 async def on_member_join(member):
     channel = client.get_channel(1198457414207426642)
-    await channel.send("Welcome {user_name} to {server_name}! Please read https://discord.com/channels/1004848935061434428/1198485354710311002 and we will see you around!")
+    await channel.send("Welcome to the server! Please read the rules and we will see you around!")
   
 
 # Sends alert to Logs Channel when someone left
@@ -95,7 +127,11 @@ async def on_member_remove(member):
     await channel.send("Goodbye, thank you for stopping in!")
 
 
-
+logger = logging.getLogger('discord')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 
 
