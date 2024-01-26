@@ -1,6 +1,15 @@
-                                          Welcome to Dino Factory
+                                          Welcome to Ruby
 
-![DFL](https://github.com/ard37880/Dino-Factory/assets/34947107/cc40fbd1-8e2e-4f3f-b966-8ab2bc651f92)
+
+![ruby](https://github.com/ard37880/Ruby/assets/34947107/d7d584de-f10a-4fd7-b240-d36ba9050247)
+
+Discription:
+Ruby is a Discord bot developed as an open-source multipurpose bot.
+
+Current Features:
+- Welcome users
+- Send a goodbye message
+- Play audio
 
 How to install:
 1. Click the install link: https://discord.com/api/oauth2/authorize?client_id=1200274769354969148&permissions=8&scope=bot
