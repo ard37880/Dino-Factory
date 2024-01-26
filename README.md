@@ -1,4 +1,4 @@
-                                          Welcome to Ruby
+Welcome to Ruby
 
 
 ![ruby](https://github.com/ard37880/Ruby/assets/34947107/d7d584de-f10a-4fd7-b240-d36ba9050247)
