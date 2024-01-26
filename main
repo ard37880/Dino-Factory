@@ -36,7 +36,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 # When Start up Bot
 @client.event
 async def on_ready():
-    print("Dino Factory is ready for use!")
+    print("Ruby is ready for use!")
     print("-------------------------------------------------")
 
 ############ Commands #############################################################
@@ -79,7 +79,7 @@ async def on_message(message):
         await message.delete()
         await message.channel.send("Message was deleted for community safty.")
         
-@client.event
+@client.event   ``
 async def on_ready():
     print("Dino Factory is ready for use!")
     print("-------------------------------------------------")
