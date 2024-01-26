@@ -10,7 +10,7 @@ Current Features:
 - Welcome users
 - Send a goodbye message
 
-Features in Progress:
+Upcoming Features:
 - Join bot to Voice Channels
 - Play, pause, and stop music
 
