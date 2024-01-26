@@ -14,6 +14,9 @@ Current Features:
 Upcoming Features:
 - Join bot to Voice Channels
 - Play, pause, and stop music
+- Embeds & Buttons
+- DM from Ruby
+- Reacts & Roles
 
 How to install:
 1. Click the install link: https://discord.com/api/oauth2/authorize?client_id=1200274769354969148&permissions=8&scope=bot
