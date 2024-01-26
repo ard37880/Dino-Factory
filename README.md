@@ -20,7 +20,7 @@ How to install:
 2. Accept permissions 
 3. The Ruby Bot should now be added to your server!
 
-Like to make a request, join our Discord! 
+Like to make a feature request or custom bot, join our Discord! 
 https://discord.gg/6N8KG5yEKN
 
 Want to support us, concider donating on our Ko-Fi!
