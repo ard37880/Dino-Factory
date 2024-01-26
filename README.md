@@ -25,3 +25,10 @@ https://discord.gg/6N8KG5yEKN
 
 Want to support us, concider donating on our Ko-Fi!
 https://ko-fi.com/eprotocol
+
+Commands:
+- !hello
+- !goodbye
+- !kick
+- !ban
+- !unban
