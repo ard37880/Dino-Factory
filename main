@@ -14,6 +14,7 @@ import traceback
 import asyncio
 import logging
 import re
+import json
 
 from discord.ext import commands
 from discord import FFmpegPCMAudio
@@ -21,6 +22,8 @@ from discord import PCMVolumeTransformer
 from apikeys import discord_bot_token
 from discord.ext import commands
 from words import bw
+from discord import Member
+from discord.ext.commands import has_permissions, MissingPermissions
 
 ############# Intendts #############################################################
 intents = intents = discord.Intents(value=8)
@@ -43,15 +46,19 @@ async def on_ready():
 # Hello when prompt 
 @client.command()
 async def hello(ctx):
-    await ctx.send("Hello, you've reached Ruby. Nice to meet you!")
+    await ctx.send(f'Hello {ctx.author.name} Im reached Ruby. Nice to meet you!')
 
 # Goodbye when prompt
 @client.command()
 async def goodbye(ctx):
-    await ctx.send("Goodbye, hope you have a great rest of your day!")
+    await ctx.send(f'Goodbye {ctx.author.name} hope you have a great rest of your day!')
 
-# Joining Voice Channel needs work currently in-progress and not supported
-
+# Kicks Member
+@client.command()
+@has_permissions(kick_members=True)
+async def kick(ctx, member: discord.Member, *, reson=None):
+    await member.kick(reason=reason)
+    await ctx.send(f'User {member} has been kicked')
 
 ############### Events ##############################################################
 
@@ -60,15 +67,8 @@ async def goodbye(ctx):
 @client.event
 async def on_member_join(member):
     channel = client.get_channel(1198457414207426642)
-    await channel.send("Welcome to the server! Please read the rules and we will see you around!")
-  
+    await channel.send(f'Welcome to the server {member} Please read the rules and we will see you around!')
 
-# Sends alert to Logs Channel when someone left
-  
-@client.event
-async def on_member_remove(member):
-    channel = client.get_channel(1198457414207426642)
-    await channel.send("Goodbye, thank you for stopping in!")
 
 # Checks for Key Words
 
@@ -79,9 +79,9 @@ async def on_message(message):
         await message.delete()
         await message.channel.send("Message was deleted for community safty.")
         
-@client.event   ``
+@client.event
 async def on_ready():
-    print("Dino Factory is ready for use!")
+    print("Ruby is ready for use!")
     print("-------------------------------------------------")
 
 # Profanity Checker
