@@ -12,6 +12,12 @@ import audio_encoding_library
 # Trigger key used for bot
 client = commands.Bot(command_prefix = '/')
 
+# Allows Intents
+intents = discord.Intents.all()
+
+client = commands.Bot(command_prefix = '!',intents=intents)
+
+# When Joined
 @client.event
 async def on_ready():
     print("Dino Factory has been added and is ready for use!")
