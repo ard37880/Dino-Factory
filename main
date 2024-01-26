@@ -11,4 +11,7 @@ async def on_ready():
 
 @client.command()
 async def hello(ctx):
-    await ctx.send("Hello, you've reached Rexy from Dino Factory")
+    await ctx.send("Hello, you've reached Rexy from Dino Factory. Nice to meet you!")
+
+
+client.run('MTIwMDI3NDc2OTM1NDk2OTE0OA.GVU7Ks.LlPRSi9d6euSt34rPDDJoeLDt8D6jGGnqVwKVI')
