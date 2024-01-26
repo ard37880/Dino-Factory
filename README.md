@@ -9,7 +9,7 @@ Ruby is a Discord bot developed as an open-source multipurpose bot.
 Current Features:
 - Welcome users
 - Profanity filter
-- Kick and Ban users
+- Kick, Ban, and Un-Ban users
 
 Upcoming Features:
 - Join bot to Voice Channels
