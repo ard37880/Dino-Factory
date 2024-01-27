@@ -12,10 +12,6 @@ Current Features:
 - Kick, Ban, and Un-Ban users
 
 Upcoming Features:
-- Join bot to Voice Channels
-- Play, pause, and stop music
-- Buttons
-- DM from Ruby
 - Reacts & Roles
 
 How to install:
