@@ -18,6 +18,7 @@ import json
 
 from discord.ext import commands
 from discord.ext.commands import has_permissions, MissingPermissions
+from discord.utils import get
 from discord import FFmpegPCMAudio
 from discord import PCMVolumeTransformer
 from discord import Member
@@ -36,9 +37,10 @@ intents.message_content = True
 client = commands.Bot(command_prefix="!", intents=intents)
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# When Start up Bot
+# Prints in terminal when ready for use
 @client.event
 async def on_ready():
+    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type = discord.ActivityType.listening, name='! commands'))
     print("Ruby is ready for use!")
     print("-------------------------------------------------")
 
@@ -89,18 +91,30 @@ async def unban_error(ctx, error):
     if isinstance(error, MissingPermissions):
         await ctx.send("You don't have permission to unban people!")
 
+# Add Roles
+@client.command()
+@commands.has_permissions(manage_roles=True)
+async def addRole(ctx, user: discord.Member, *, role: discord.Role):
+    if role in user.roles:
+        await ctx.send(f"{user.mention} already has the role {role}.")
+    else:
+        await user.add_roles(role)
+        await ctx.send(f"Added {role} to {user.mention}.")
+
+# Remove Roles
+@client.command()
+@commands.has_permissions(manage_roles=True)
+async def removeRole(ctx, user: discord.Member, *, role: discord.Role):
+    if role in user.roles:
+        await user.remove_roles(role)
+        await ctx.send(f"Removed {role} from {user.mention}.")
+    else:
+        await ctx.send(f"{user.mention} does not have the role {role}.")
+
 
 ############### Events ##############################################################
 
-# Prints in terminal when ready for use
-@client.event
-async def on_ready():
-    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type = discord.ActivityType.listening, name='! commands'))
-    print("Ruby is ready for use!")
-    print("-------------------------------------------------")
-
-# Welcomes user to server in Welcome Channel
-   
+# Welcomes user to server in Welcome Channel  
 @client.event
 async def on_member_join(member):
     channel = client.get_channel(1198457414207426642)
@@ -147,6 +161,18 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.MissingRequiredAttachment):
         await ctx.send("Please try again, command was not complete.")
 
+# Missing Perm for Roles Add
+@addRole.error
+async def role_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("You do not have permission to run this command.")
+
+# Missing Perm for Roles Remove
+@removeRole.error
+async def role_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("You do not have permission to run this command.")
+
 ################ Logging #############################################################
 
 logger = logging.getLogger('discord')
@@ -159,4 +185,4 @@ logger.addHandler(handler)
 
 ############# Bot Token ##############################################################
 client.run(discord_bot_token)
-############# END#####################################################################
+############# END #####################################################################
