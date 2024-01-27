@@ -89,11 +89,13 @@ async def unban_error(ctx, error):
     if isinstance(error, MissingPermissions):
         await ctx.send("You don't have permission to unban people!")
 
+
 ############### Events ##############################################################
 
 # Prints in terminal when ready for use
 @client.event
 async def on_ready():
+    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type = discord.ActivityType.listening, name='! commands'))
     print("Ruby is ready for use!")
     print("-------------------------------------------------")
 
