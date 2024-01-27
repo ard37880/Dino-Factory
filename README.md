@@ -10,9 +10,7 @@ Current Features:
 - Welcome users
 - Profanity filter
 - Kick, Ban, and Un-Ban users
-
-Upcoming Features:
-- Reacts & Roles
+- Add and Remove Roles
 
 How to install:
 1. Click the install link in releases 
@@ -31,3 +29,5 @@ Commands:
 - !kick
 - !ban
 - !unban
+- !addRole
+- !removeRole
