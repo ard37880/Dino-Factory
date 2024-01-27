@@ -17,13 +17,13 @@ import re
 import json
 
 from discord.ext import commands
+from discord.ext.commands import has_permissions, MissingPermissions
 from discord import FFmpegPCMAudio
 from discord import PCMVolumeTransformer
-from apikeys import discord_bot_token
-from discord.ext import commands
-from words import bw
 from discord import Member
-from discord.ext.commands import has_permissions, MissingPermissions
+from apikeys import discord_bot_token
+from words import bw
+
 
 ############# Intendts #############################################################
 intents = intents = discord.Intents(value=8)
@@ -46,7 +46,7 @@ async def on_ready():
 # Hello when prompt 
 @client.command()
 async def hello(ctx):
-    await ctx.send(f'Hello {ctx.author.name}, Im reached Ruby. Nice to meet you!')
+    await ctx.send(f'Hello {ctx.author.name}, Im Ruby. Nice to meet you!')
 
 # Goodbye when prompt
 @client.command()
@@ -123,6 +123,29 @@ async def on_message(message):
     # Important: process commands if no profanity is found
     await client.process_commands(message)
 
+############## Reporting Errors ######################################################
+
+@client.event
+async def on_command_error(ctx, error):
+    # Missing Permissions
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("You don't have permission to run this command, please try again later.")
+
+    # Missing Flag Arguments
+    elif isinstance(error, commands.MissingFlagArgument):
+        await ctx.send("Please try again, command was not complete.")
+
+    # Missing Role
+    elif isinstance(error, commands.MissingRole):
+        await ctx.send("You don't have the role required to use this command.")
+
+    # Bot Missing Permissions
+    elif isinstance(error, commands.BotMissingPermissions):
+        await ctx.send("Sorry, can not complete at this time. Ruby is currently missing permissions needed to complete command.")
+
+    # Missing Required Attachment
+    elif isinstance(error, commands.MissingRequiredAttachment):
+        await ctx.send("Please try again, command was not complete.")
 
 ################ Logging #############################################################
 
