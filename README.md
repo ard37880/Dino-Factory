@@ -24,10 +24,4 @@ Want to support us, concider donating on our Ko-Fi!
 https://ko-fi.com/eprotocol
 
 Commands:
-- !hello
-- !goodbye
-- !kick
-- !ban
-- !unban
-- !addRole
-- !removeRole
+For list of commands type !help once bot is installed
