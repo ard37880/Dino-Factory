@@ -12,6 +12,9 @@ Current Features:
 - Kick, Ban, and Un-Ban users
 - Add and Remove Roles
 
+Upcomming Features:
+- / Commands
+
 How to install:
 1. Click the install link in releases 
 2. Accept permissions 
