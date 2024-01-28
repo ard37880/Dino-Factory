@@ -6,7 +6,7 @@ Any code not in use comment out like this so we can save it for reactivation per
 '''   
 
 ############# Imports ###############################################################
-import discord
+import nextcord
 import requests
 import nacl
 import asyncio
@@ -16,18 +16,19 @@ import logging
 import re
 import json
 
-from discord.ext import commands
-from discord.ext.commands import has_permissions, MissingPermissions
-from discord.utils import get
-from discord import FFmpegPCMAudio
-from discord import PCMVolumeTransformer
-from discord import Member
+from nextcord.ext import commands
+from nextcord.ext.commands import has_permissions, MissingPermissions
+from nextcord.utils import get
+from nextcord import FFmpegPCMAudio
+from nextcord import Interaction
+from nextcord import PCMVolumeTransformer
+from nextcord import Member
 from apikeys import discord_bot_token
 from words import bw
 
 
 ############# Intendts #############################################################
-intents = intents = discord.Intents(value=8)
+intents = intents = nextcord.Intents.default()
 intents.members = True
 intents.messages = True
 intents.guilds = True
@@ -40,91 +41,77 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 # Prints in terminal when ready for use
 @client.event
 async def on_ready():
-    await client.change_presence(status=discord.Status.online, activity=discord.Activity(type = discord.ActivityType.listening, name='! commands'))
+    await client.change_presence(status=nextcord.Status.online, activity=nextcord.Activity(type = nextcord.ActivityType.listening, name='! commands'))
     print("Ruby is ready for use!")
     print("-------------------------------------------------")
 
-############ Commands #############################################################
-# Hello when prompt 
-@client.command()
-async def hello(ctx):
-    await ctx.send(f'Hello {ctx.author.name}, Im Ruby. Nice to meet you!')
+############ Commands ###########################################################
 
-# Goodbye when prompt
-@client.command()
-async def goodbye(ctx):
-    await ctx.send(f'Goodbye {ctx.author.name}, hope you have a great rest of your day!')
+# Greeting Message
+@client.slash_command(description="Gives greeting message")
+async def hello(Interaction: Interaction):
+    await Interaction.response.send_message(f'Hello {Interaction.user.name}, Im Ruby. Nice to meet you!')
 
-# Kicks Member
-@client.command()
-@has_permissions(kick_members=True)
-async def kick(ctx, member: discord.Member, *, reason=None):
+# Goodbye Message
+@client.slash_command(description="Say goodbye")
+async def goodbye(interaction: Interaction):
+    await interaction.response.send_message(f'Goodbye {interaction.user.name}, hope you have a great rest of your day!')
+
+# Kick Member
+@client.slash_command(description="Kick a member")
+@commands.has_permissions(kick_members=True)
+async def kick(interaction: Interaction, member: nextcord.Member, reason: str = None):
     await member.kick(reason=reason)
-    await ctx.send(f'User {member} has been kicked.')
+    await interaction.response.send_message(f'User {member} has been kicked.')
 
-@kick.error
-async def kick_error(ctx, error):
-    if isinstance(error, MissingPermissions):
-        await ctx.send("You don't have permission to kick people!")
-
-# Bans Member
-@client.command()
-@has_permissions(ban_members=True)
-async def ban(ctx, member: discord.Member, *, reason=None):
-    await member.ban(reason=reason)
-    await ctx.send(f'User {member} has been banned.')
-
-@ban.error
-async def ban_error(ctx, error):
-    if isinstance(error, MissingPermissions):
-        await ctx.send("You don't have permission to ban people!")
+# Ban Member
+@client.slash_command(description="Ban a member")
+@commands.has_permissions(ban_members=True)
+async def ban(interaction: nextcord.Interaction, member: nextcord.Member, reason: str = None):
+    await interaction.guild.ban(member, reason=reason)
+    await interaction.response.send_message(f'User {member} has been banned.')
 
 # Unban Member
-@client.command()
-@has_permissions(ban_members=True)
-async def unban(ctx, *, user: discord.User):
-    await ctx.guild.unban(user)
-    await ctx.send(f'User {user} has been unbanned.')
+@client.slash_command(description="Unban a member")
+@commands.has_permissions(ban_members=True)
+async def unban(interaction: Interaction, user: nextcord.User):
+    await interaction.guild.unban(user)
+    await interaction.response.send_message(f'User {user} has been unbanned.')
 
-@unban.error
-async def unban_error(ctx, error):
-    if isinstance(error, MissingPermissions):
-        await ctx.send("You don't have permission to unban people!")
-
-# Add Roles
-@client.command()
+# Add Role
+@client.slash_command(description="Add a role to a member")
 @commands.has_permissions(manage_roles=True)
-async def addRole(ctx, user: discord.Member, *, role: discord.Role):
+async def add_role(interaction: Interaction, user: nextcord.Member, role: nextcord.Role):
     if role in user.roles:
-        await ctx.send(f"{user.mention} already has the role {role}.")
+        await interaction.response.send_message(f"{user.mention} already has the role {role}.")
     else:
         await user.add_roles(role)
-        await ctx.send(f"Added {role} to {user.mention}.")
+        await interaction.response.send_message(f"Added {role} to {user.mention}.")
 
-# Remove Roles
-@client.command()
+# Remove Role
+@client.slash_command(description="Remove a role from a member")
 @commands.has_permissions(manage_roles=True)
-async def removeRole(ctx, user: discord.Member, *, role: discord.Role):
+async def remove_role(interaction: Interaction, user: nextcord.Member, role: nextcord.Role):
     if role in user.roles:
         await user.remove_roles(role)
-        await ctx.send(f"Removed {role} from {user.mention}.")
+        await interaction.response.send_message(f"Removed {role} from {user.mention}.")
     else:
-        await ctx.send(f"{user.mention} does not have the role {role}.")
+        await interaction.response.send_message(f"{user.mention} does not have the role {role}.")
 
 
 ############### Events ##############################################################
-
-# Welcomes user to server in Welcome Channel  
+        
+# Welcomes user to server in Welcome Channel
 @client.event
-async def on_member_join(member):
-    channel = client.get_channel(1198457414207426642)
-    await channel.send(f'Welcome to the server {member}! Please read the rules and we will see you around!')
+async def on_member_join(member: nextcord.Member):
+    channel = await client.fetch_channel(1198457414207426642)
+    await channel.send(f'Welcome to the server {member.mention}! Please read the rules and we will see you around!')
 
 # Profanity Checker
-profanity_list = bw
+profanity_list = bw  
 
 @client.event
-async def on_message(message):
+async def on_message(message: nextcord.Message):
     # Skip if the message is from the bot itself
     if message.author == client.user:
         return
@@ -136,48 +123,48 @@ async def on_message(message):
 
     # Important: process commands if no profanity is found
     await client.process_commands(message)
-
+    
 ############## Reporting Errors ######################################################
 
 @client.event
-async def on_command_error(ctx, error):
+async def on_command_error(interaction: nextcord.Interaction, error):
     # Missing Permissions
     if isinstance(error, commands.MissingPermissions):
-        await ctx.send("You don't have permission to run this command, please try again later.")
+        await interaction.response.send_message("You don't have permission to run this command, please try again later.")
 
     # Missing Flag Arguments
     elif isinstance(error, commands.MissingFlagArgument):
-        await ctx.send("Please try again, command was not complete.")
+        await interaction.response.send_message("Please try again, command was not complete.")
 
     # Missing Role
     elif isinstance(error, commands.MissingRole):
-        await ctx.send("You don't have the role required to use this command.")
+        await interaction.response.send_message("You don't have the role required to use this command.")
 
     # Bot Missing Permissions
     elif isinstance(error, commands.BotMissingPermissions):
-        await ctx.send("Sorry, can not complete at this time. Ruby is currently missing permissions needed to complete command.")
+        await interaction.response.send_message("Sorry, can not complete at this time. Ruby is currently missing permissions needed to complete command.")
 
     # Missing Required Attachment
     elif isinstance(error, commands.MissingRequiredAttachment):
-        await ctx.send("Please try again, command was not complete.")
+        await interaction.response.send_message("Please try again, command was not complete.")
 
 # Missing Perm for Roles Add
-@addRole.error
+@add_role.error
 async def role_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("You do not have permission to run this command.")
 
 # Missing Perm for Roles Remove
-@removeRole.error
+@remove_role.error
 async def role_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("You do not have permission to run this command.")
 
 ################ Logging #############################################################
 
-logger = logging.getLogger('discord')
+logger = logging.getLogger('nextcord')
 logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler = logging.FileHandler(filename='nextcord.log', encoding='utf-8', mode='w')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
