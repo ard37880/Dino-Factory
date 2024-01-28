@@ -14,6 +14,10 @@ Current Features:
 - Add and Remove Roles
 - / Commands
 
+Upcoming Features: 
+- Ticketing system
+- Logging
+
 How to install:
 1. Click the install link in releases 
 2. Accept permissions 
