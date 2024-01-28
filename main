@@ -5,7 +5,7 @@
 Any code not in use comment out like this so we can save it for reactivation per server
 '''   
 
-############# Imports ###############################################################
+############# Imports #################################################################
 import nextcord
 import requests
 import nacl
@@ -26,6 +26,29 @@ from nextcord import Member
 from apikeys import discord_bot_token
 from words import bw
 
+############ Classes #################################################################
+
+class Help(nextcord.ui.View):
+    def __init__(self):
+        super().__init__(timeout = None)
+        self.value = None
+
+    @nextcord.ui.button(label="Support", style=nextcord.ButtonStyle.blurple)
+    async def support_button(self, button: nextcord.ui.Button, interaction: Interaction):
+        await interaction.response.send_message(f"Hi {interaction.user.name}, need support or have a request? Open a ticket here: https://discord.gg/RN9EYeZP2n", ephemeral=False)
+        self.value = True
+        self.stop()
+
+class Donate(nextcord.ui.View):
+    def __init__(self):
+        super().__init__(timeout = None)
+        self.value = None
+
+    @nextcord.ui.button(label="Donate", style=nextcord.ButtonStyle.green)
+    async def donate_button(self, button: nextcord.ui.Button, interaction: Interaction):
+        await interaction.response.send_message(f"Thank you {interaction.user.name} for wanting to support us! -Ruby Dev Team ❤️. Our Ko-Fi: https://ko-fi.com/eprotocol", ephemeral=False)
+        self.value = True
+        self.stop()
 
 ############# Intendts #############################################################
 intents = intents = nextcord.Intents.default()
@@ -46,6 +69,20 @@ async def on_ready():
     print("-------------------------------------------------")
 
 ############ Commands ###########################################################
+
+# About Button
+@client.slash_command(description="Help")
+async def support(Interaction: Interaction):
+    view = Help()
+    await Interaction.response.send_message("Please click the button to continue:", view=view)
+    await view.wait()
+
+# Donate Button
+@client.slash_command(description="Donate")
+async def donate(Interaction: Interaction):
+    view = Donate()
+    await Interaction.response.send_message("Please click the button to continue:", view=view)
+    await view.wait()
 
 # Greeting Message
 @client.slash_command(description="Gives greeting message")
