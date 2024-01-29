@@ -35,7 +35,7 @@ class Help(nextcord.ui.View):
 
     @nextcord.ui.button(label="Support", style=nextcord.ButtonStyle.blurple)
     async def support_button(self, button: nextcord.ui.Button, interaction: Interaction):
-        await interaction.response.send_message(f"Hi {interaction.user.name}, need support or have a request? Open a ticket here: https://discord.gg/RN9EYeZP2n", ephemeral=False)
+        await interaction.response.send_message(f"Hi {interaction.user.name}, need support or have a request? Open a ticket here: https://discord.gg/ha52CUnYx5", ephemeral=False)
         self.value = True
         self.stop()
 
