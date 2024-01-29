@@ -15,7 +15,6 @@ Current Features:
 - / Commands
 
 Upcoming Features: 
-- Ticketing system
 - Logging
 
 How to install:
