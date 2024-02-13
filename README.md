@@ -11,21 +11,21 @@ Current Features:
 - Greetings
 - Profanity filter
 - Kick, Ban, and Un-Ban users
-- Add and Remove Roles
+- Add, Remove, and Autoassign Roles
 - / Commands
 
 Upcoming Features: 
 - Logging
 
-How to install:
-1. Click the install link in releases 
-2. Accept permissions 
-3. Done! The Ruby Bot should now be added to your server!
+How to use:
+1. Download your prefered release (latest is reccommended) 
+2. Change any channel IDs, Role names, Discord bot token, etc BEFORE installing onto your server
+3. Once done you can now save and run it locally!
 
 Like to make a feature request or custom bot, join our Discord! 
 https://discord.gg/6N8KG5yEKN
 
-Want to support us, concider donating on our Ko-Fi!
+Want to support us or would like us to host the bot for you? Concider donating and checking out our shop on our Ko-Fi!
 https://ko-fi.com/eprotocol
 
 Commands:
