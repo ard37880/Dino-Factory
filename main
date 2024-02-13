@@ -15,16 +15,33 @@ import asyncio
 import logging
 import re
 import json
+import datetime
 
-from nextcord.ext import commands
+from nextcord.ext import commands, tasks
 from nextcord.ext.commands import has_permissions, MissingPermissions
 from nextcord.utils import get
+from nextcord.ui import Select, View, Button
 from nextcord import FFmpegPCMAudio
 from nextcord import Interaction
 from nextcord import PCMVolumeTransformer
 from nextcord import Member
 from apikeys import discord_bot_token
 from words import bw
+
+############# Intendts #############################################################
+
+intents = intents = nextcord.Intents.default()
+intents.guilds = True
+intents.guild_typing = True
+intents.guild_messages = True
+intents.guild_reactions = True
+intents.members = True
+intents.messages = True
+intents.message_content = True
+intents.presences = True
+
+client = commands.Bot(command_prefix='!', intents=nextcord.Intents.all())
+bot = commands.Bot(command_prefix="!", intents=nextcord.Intents.all())
 
 ############ Classes #################################################################
 
@@ -35,7 +52,7 @@ class Help(nextcord.ui.View):
 
     @nextcord.ui.button(label="Support", style=nextcord.ButtonStyle.blurple)
     async def support_button(self, button: nextcord.ui.Button, interaction: Interaction):
-        await interaction.response.send_message(f"Hi {interaction.user.name}, need support or have a request? Open a ticket here: https://discord.gg/ha52CUnYx5", ephemeral=False)
+        await interaction.response.send_message(f"Hi {interaction.user.name}, need support or have a request? Open a ticket here: https://discord.gg/ha52CUnYx5", ephemeral=True)
         self.value = True
         self.stop()
 
@@ -46,29 +63,37 @@ class Donate(nextcord.ui.View):
 
     @nextcord.ui.button(label="Donate", style=nextcord.ButtonStyle.green)
     async def donate_button(self, button: nextcord.ui.Button, interaction: Interaction):
-        await interaction.response.send_message(f"Thank you {interaction.user.name} for wanting to support us! -Ruby Dev Team ❤️. Our Ko-Fi: https://ko-fi.com/eprotocol", ephemeral=False)
+        await interaction.response.send_message(f"Thank you {interaction.user.name} for wanting to support us! -Ruby Dev Team ❤️. Our Ko-Fi: https://ko-fi.com/eprotocol", ephemeral=True)
         self.value = True
         self.stop()
 
-############# Intendts #############################################################
-intents = intents = nextcord.Intents.default()
-intents.members = True
-intents.messages = True
-intents.guilds = True
-intents.message_content = True
+class Other_Bots(nextcord.ui.View):
+    def __init__(self):
+        super().__init__(timeout = None)
+        self.value = None
 
-############ Trigger ###############################################################
-client = commands.Bot(command_prefix="!", intents=intents)
-bot = commands.Bot(command_prefix="!", intents=intents)
+    @nextcord.ui.button(label="Other Bots", style=nextcord.ButtonStyle.red)
+    async def other_bots(self, button: nextcord.ui.Button, interaction: Interaction):
+        await interaction.response.send_message("Want to see more of our work? Find all of our bots and work here: https://github.com/ard37880", ephemeral=True)
+        self.value = True
+        self.stop()
 
-# Prints in terminal when ready for use
+############# Start Up #############################################################
+        
 @client.event
 async def on_ready():
-    await client.change_presence(status=nextcord.Status.online, activity=nextcord.Activity(type = nextcord.ActivityType.listening, name='/ commands'))
+    await client.change_presence(status=nextcord.Status.online, activity=nextcord.Activity(type = nextcord.ActivityType.listening, name='for / commands'))
     print("Ruby is ready for use!")
     print("-------------------------------------------------")
 
 ############ Commands ###########################################################
+
+# Other Bots/ Github Button
+@client.slash_command(description="Other bots and work")
+async def other_bots(Interaction: Interaction):
+    view = Other_Bots()
+    await Interaction.response.send_message("Please click the button to continue:", view=view)
+    await view.wait()
 
 # About Button
 @client.slash_command(description="Help")
@@ -135,31 +160,66 @@ async def remove_role(interaction: Interaction, user: nextcord.Member, role: nex
     else:
         await interaction.response.send_message(f"{user.mention} does not have the role {role}.")
 
+# Toggles on and off Profanity Filter
+@client.slash_command(name="profanity_filter", description="Toggle the profanity filter on or off")
+async def toggle_profanity_filter(interaction: nextcord.Interaction):
+    global profanity_filter_on
+    profanity_filter_on = not profanity_filter_on
+    status = "enabled" if profanity_filter_on else "disabled"
+    await interaction.response.send_message(f"Profanity filter is now {status}.", ephemeral=True)
 
 ############### Events ##############################################################
-        
-# Welcomes user to server in Welcome Channel
+
+# Welcome to Channel
 @client.event
 async def on_member_join(member: nextcord.Member):
-    channel = await client.fetch_channel(1198457414207426642)
-    await channel.send(f'Welcome to the server {member.mention}! Please read the rules and we will see you around!')
+    channel = await client.fetch_channel(1201278422589120555)
+    await channel.send(f'Welcome to the server {member.mention}! Please read https://discord.com/channels/1201278421821558864/1201442000478679141 and we will see you around!')
+
+# Auto assigns role
+@client.event
+async def on_member_join(member):
+    role_names = ["member"] 
+    assigned_roles = []
+
+    for role_name in role_names:
+        role = nextcord.utils.get(member.guild.roles, name=role_name)
+        if role:
+            await member.add_roles(role)
+            assigned_roles.append(role_name)
+            print(f"Assigned {role_name} to {member.display_name}")
+        else:
+            print(f"Role {role_name} not found")
+
+    if assigned_roles:
+        print(f"Successfully assigned roles: {', '.join(assigned_roles)} to {member.display_name}")
+    else:
+        print("No roles were assigned.")
 
 # Profanity Checker
-profanity_list = bw  
+profanity_list = bw 
+profanity_filter_on = True
 
 @client.event
 async def on_message(message: nextcord.Message):
-    # Skip if the message is from the bot itself
+    global profanity_filter_on  
+
     if message.author == client.user:
         return
 
-    # Check for profanity in the message
-    if any(re.search(r"\b" + re.escape(word) + r"\b", message.content.lower()) for word in profanity_list):
+    if profanity_filter_on and any(re.search(r"\b" + re.escape(word) + r"\b", message.content.lower()) for word in profanity_list):
         await message.delete()
         await message.channel.send("Message was deleted for community safety.")
+        return 
 
-    # Important: process commands if no profanity is found
     await client.process_commands(message)
+
+@client.command()
+async def toggle_profanity_filter(ctx):
+    global profanity_filter_on
+    profanity_filter_on = not profanity_filter_on 
+    status = "on" if profanity_filter_on else "off"
+    await ctx.send(f"Profanity filter is now {status}.")
     
 ############## Reporting Errors ######################################################
 
