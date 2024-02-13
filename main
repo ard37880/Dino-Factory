@@ -1,9 +1,6 @@
 # Ruby/ The Ruby Bot
 # Made by: Andrew Davis
 # 01/25/2024
-'''   
-Any code not in use comment out like this so we can save it for reactivation per server
-'''   
 
 ############# Imports #################################################################
 import nextcord
@@ -67,13 +64,13 @@ class Donate(nextcord.ui.View):
         self.value = True
         self.stop()
 
-class Other_Bots(nextcord.ui.View):
+class Github(nextcord.ui.View):
     def __init__(self):
         super().__init__(timeout = None)
         self.value = None
 
-    @nextcord.ui.button(label="Other Bots", style=nextcord.ButtonStyle.red)
-    async def other_bots(self, button: nextcord.ui.Button, interaction: Interaction):
+    @nextcord.ui.button(label="Github", style=nextcord.ButtonStyle.red)
+    async def github_button(self, button: nextcord.ui.Button, interaction: Interaction):
         await interaction.response.send_message("Want to see more of our work? Find all of our bots and work here: https://github.com/ard37880", ephemeral=True)
         self.value = True
         self.stop()
@@ -88,10 +85,10 @@ async def on_ready():
 
 ############ Commands ###########################################################
 
-# Other Bots/ Github Button
-@client.slash_command(description="Other bots and work")
-async def other_bots(Interaction: Interaction):
-    view = Other_Bots()
+# Github Button
+@client.slash_command(description="Our Github")
+async def github(Interaction: Interaction):
+    view = Github()
     await Interaction.response.send_message("Please click the button to continue:", view=view)
     await view.wait()
 
@@ -220,6 +217,39 @@ async def toggle_profanity_filter(ctx):
     profanity_filter_on = not profanity_filter_on 
     status = "on" if profanity_filter_on else "off"
     await ctx.send(f"Profanity filter is now {status}.")
+
+# Add/ Remove words from list
+WORDS_FILE_PATH = r"YOUR\PATH\TO\WORDS.PY"
+
+def read_words_from_file():
+    with open(WORDS_FILE_PATH, "r", encoding='utf-8') as file:
+        content = file.read()
+        words = eval(content.split('=')[1].strip())
+    return words
+
+def write_words_to_file(words):
+    with open(WORDS_FILE_PATH, "w", encoding='utf-8') as file:
+        file.write(f"words = {words}")
+
+@client.slash_command(name="add_word", description="Add a word to words.py")
+async def add_word(interaction: nextcord.Interaction, word: str):
+    words = read_words_from_file()
+    if word not in words:
+        words.append(word)
+        write_words_to_file(words)
+        await interaction.response.send_message(f"Added word `{word}` to words.py.")
+    else:
+        await interaction.response.send_message(f"Word `{word}` already exists in words.py.")
+
+@client.slash_command(name="remove_word", description="Remove a word from words.py")
+async def remove_word(interaction: nextcord.Interaction, word: str):
+    words = read_words_from_file()
+    if word in words:
+        words.remove(word)
+        write_words_to_file(words)
+        await interaction.response.send_message(f"Removed word `{word}` from words.py.")
+    else:
+        await interaction.response.send_message(f"Word `{word}` not found in words.py.")
     
 ############## Reporting Errors ######################################################
 
