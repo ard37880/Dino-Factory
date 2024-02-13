@@ -173,13 +173,13 @@ async def toggle_profanity_filter(interaction: nextcord.Interaction):
 # Welcome to Channel
 @client.event
 async def on_member_join(member: nextcord.Member):
-    channel = await client.fetch_channel(1201278422589120555)
+    channel = await client.fetch_channel(YOUR_WELCOME_CHANNEL_ID)
     await channel.send(f'Welcome to the server {member.mention}! Please read https://discord.com/channels/1201278421821558864/1201442000478679141 and we will see you around!')
 
 # Auto assigns role
 @client.event
 async def on_member_join(member):
-    role_names = ["member"] 
+    role_names = ["YOUR_ROLE_NAME"] 
     assigned_roles = []
 
     for role_name in role_names:
