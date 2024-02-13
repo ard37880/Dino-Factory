@@ -19,7 +19,7 @@ Upcoming Features:
 
 How to use:
 1. Download your prefered release (latest is reccommended) 
-2. Change any channel IDs, Role names, Discord bot token, etc BEFORE installing onto your server
+2. Change any channel IDs, Role names, Discord bot token, etc.
 3. Once done you can now save and run it locally!
 
 Like to make a feature request or custom bot, join our Discord! 
