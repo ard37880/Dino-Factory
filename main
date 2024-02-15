@@ -165,59 +165,6 @@ async def toggle_profanity_filter(interaction: nextcord.Interaction):
     status = "enabled" if profanity_filter_on else "disabled"
     await interaction.response.send_message(f"Profanity filter is now {status}.", ephemeral=True)
 
-############### Events ##############################################################
-
-# Welcome to Channel
-@client.event
-async def on_member_join(member: nextcord.Member):
-    channel = await client.fetch_channel(YOUR_WELCOME_CHANNEL_ID)
-    await channel.send(f'Welcome to the server {member.mention}! Please read https://discord.com/channels/1201278421821558864/1201442000478679141 and we will see you around!')
-
-# Auto assigns role
-@client.event
-async def on_member_join(member):
-    role_names = ["YOUR_ROLE_NAME"] 
-    assigned_roles = []
-
-    for role_name in role_names:
-        role = nextcord.utils.get(member.guild.roles, name=role_name)
-        if role:
-            await member.add_roles(role)
-            assigned_roles.append(role_name)
-            print(f"Assigned {role_name} to {member.display_name}")
-        else:
-            print(f"Role {role_name} not found")
-
-    if assigned_roles:
-        print(f"Successfully assigned roles: {', '.join(assigned_roles)} to {member.display_name}")
-    else:
-        print("No roles were assigned.")
-
-# Profanity Checker
-profanity_list = bw 
-profanity_filter_on = True
-
-@client.event
-async def on_message(message: nextcord.Message):
-    global profanity_filter_on  
-
-    if message.author == client.user:
-        return
-
-    if profanity_filter_on and any(re.search(r"\b" + re.escape(word) + r"\b", message.content.lower()) for word in profanity_list):
-        await message.delete()
-        await message.channel.send("Message was deleted for community safety.")
-        return 
-
-    await client.process_commands(message)
-
-@client.command()
-async def toggle_profanity_filter(ctx):
-    global profanity_filter_on
-    profanity_filter_on = not profanity_filter_on 
-    status = "on" if profanity_filter_on else "off"
-    await ctx.send(f"Profanity filter is now {status}.")
-
 # Add/ Remove words from list
 WORDS_FILE_PATH = r"YOUR\PATH\TO\WORDS.PY"
 
@@ -250,6 +197,61 @@ async def remove_word(interaction: nextcord.Interaction, word: str):
         await interaction.response.send_message(f"Removed word `{word}` from words.py.")
     else:
         await interaction.response.send_message(f"Word `{word}` not found in words.py.")
+
+############### Events ##############################################################
+
+# Welcome to Channel
+@client.event
+async def on_member_join(member: nextcord.Member):
+    channel = await client.fetch_channel(YOUR_WELCOME_CHANNEL_ID)
+    await channel.send(f'Welcome to the server {member.mention}! Please read https://discord.com/channels/1201278421821558864/1201442000478679141 and we will see you around!')
+
+# Auto assigns role
+@client.event
+async def on_member_join(member):
+    role_names = ["YOUR_ROLE_NAME"] 
+    assigned_roles = []
+
+    for role_name in role_names:
+        role = nextcord.utils.get(member.guild.roles, name=role_name)
+        if role:
+            await member.add_roles(role)
+            assigned_roles.append(role_name)
+            print(f"Assigned {role_name} to {member.display_name}")
+        else:
+            print(f"Role {role_name} not found")
+
+    if assigned_roles:
+        print(f"Successfully assigned roles: {', '.join(assigned_roles)} to {member.display_name}")
+    else:
+        print("No roles were assigned.")
+
+# Profanity Checker
+profanity_list = words 
+profanity_filter_on = True
+
+profanity_pattern = re.compile("|".join(r"\b" + re.escape(word) + r"\b" for word in profanity_list), re.IGNORECASE)
+
+@client.event
+async def on_message(message: nextcord.Message):
+    global profanity_filter_on
+
+    if message.author == client.user:
+        return
+
+    if profanity_filter_on and profanity_pattern.search(message.content):
+        await message.delete()
+        await message.channel.send("Message was deleted for community safety.")
+        return
+
+    await client.process_commands(message)
+
+@client.command()
+async def toggle_profanity_filter(ctx):
+    global profanity_filter_on
+    profanity_filter_on = not profanity_filter_on 
+    status = "on" if profanity_filter_on else "off"
+    await ctx.send(f"Profanity filter is now {status}.")
     
 ############## Reporting Errors ######################################################
 
